@@ -16,7 +16,7 @@ public class TreeExamples {
 
     public static void main(String args[]){
         TreeExamples t = new TreeExamples();
-        ArrayList<Integer> A = t.getRandomArrayList(5);
+        ArrayList<Integer> A = t.getRandomArrayList(10);
         t.printArray(A);
         System.out.println();
         Node root = t.createBST(A);
@@ -32,6 +32,10 @@ public class TreeExamples {
         System.out.println();
         System.out.print("BFS Iterative Traversal in Tree: ");
         t.treeBFSIteration(root);
+        t.deleteTree(root);
+        NodeLevel n = t.deepesetNode(root, 0);
+        System.out.println("Node is: "+n.n.data);
+        System.out.println("Level is: "+n.level);
     }
 
     void printArray(ArrayList<Integer> A){
@@ -203,4 +207,51 @@ public class TreeExamples {
             }
         }
     }
+
+    void deleteTree(Node root){
+        if(root!=null){
+            if(root.left != null) deleteTree(root.left);
+            if(root.right != null) deleteTree(root.right);
+            if(root.left == null && root.right == null) {
+                System.out.println();
+                System.out.println("Deleting Node "+root.data);
+                root = null;
+            }
+        }
+    }
+    class NodeLevel{
+        Node n;
+        int level;
+    }
+    NodeLevel deepesetNode(Node root, int pre_level){
+        if(root!=null){
+            int level = pre_level+1;
+            NodeLevel left=null, right=null;
+            if(root.left !=null){
+                left = deepesetNode(root.left, level);
+            }
+            if(root.right != null) {
+                right = deepesetNode(root.right, level);
+            }
+            if(root.left == null && root.right == null) {
+                NodeLevel n = new NodeLevel();
+                n.n = root;
+                n.level = level;
+                return n;
+            }
+            if(left != null && right!= null){
+                if(left.level > right.level) return left;
+                else{
+                    return right;
+                }
+            }else{
+                if(left == null){
+                    return right;
+                }else{
+                    return left;
+                }
+            }
+        }else return null;
+    }
+
 }
